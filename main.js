@@ -22,3 +22,25 @@ async function exchangeAuthCodeForToken(authCode) {
         alert("Yetkilendirme başarısız: " + data.error);
     }
 }
+
+
+async function fetchCampaignData() {
+    const campaignId = document.getElementById('campaign_id').value;
+    const accessToken = localStorage.getItem('access_token');
+
+    if (!accessToken) {
+        alert("Önce Google ile giriş yapmalısınız!");
+        return;
+    }
+
+    const response = await fetch(`https://googleads.googleapis.com/v12/customers/${campaignId}/campaigns`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${accessToken}`,
+            'developer-token': 'YOUR_GOOGLE_ADS_DEVELOPER_TOKEN'
+        }
+    });
+
+    const data = await response.json();
+    document.getElementById('result').innerText = JSON.stringify(data, null, 2);
+}
